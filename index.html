@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="thumbnail.png">
+    <title>Sasta To-do list</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .txt1 {
+            font-size: 30px;
+            margin-left: 5px;
+        }
+        .box1 {
+            width: 100%;
+            background: linear-gradient(to right, whitesmoke 5%, rgba(0,0,0,0) 100%);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <p style="font-size: 50px;text-align: center;">To-do list</p>
+    <a>Type what u want to add:</a>
+    <input type="text" class="tb1" id="inp1" placeholder="Type here :)">
+    <button onclick="add(document.getElementById('inp1').value)">Enter</button>
+    <div id="list"></div>
+    <script>
+        var list = []
+        var b = -1;
+        load();
+        function add(value) {
+            var check1  = value.length;
+            if(check1 != 0) {
+                var check2 = value.trim().length
+                if(check2 != 0) {
+                    radd(value)
+                }
+            } 
+        }
+        function radd(value) {
+            b += 1;
+            const div = document.createElement("div")
+            div.id = "box" + b;
+            div.classList.add("box1");
+
+            document.getElementById("list").appendChild(div);
+            
+            const text = document.createElement("a");
+            text.innerHTML = value;
+            text.classList.add("txt1");
+            div.onmouseover = function() {
+                text.style.textDecoration = "line-through";
+            }
+            div.onmouseout = function() {
+                text.style.textDecoration = "none";
+            }
+            document.getElementById("box" + b).appendChild(text);
+            div.onclick = function() {
+                remove(div , value);
+            }
+            update(value);
+        }
+        function update(value) {
+            list.push(value);
+            console.log(list);
+            var list1 = JSON.stringify(list);
+            localStorage.l = list1;
+        }
+        function update2(value) {
+            var iv = list.indexOf(value);
+            list.splice(iv,1);
+            console.log(list);
+            var list1 = JSON.stringify(list);
+            localStorage.l = list1;
+            updatel();
+        }
+        function remove(me , value) {
+
+                me.remove();
+                update2(value);
+        }
+        function updatel() {
+            var ll = document.getElementById("list").children;
+            var llngth = document.getElementById("list").children.length;
+            i = 0;
+            b = 0;
+            while (i < llngth) {
+                ll[i].id = "box" + i
+                i +=1;
+            }
+            i -= 1;
+            b = i;
+        }
+        function load() {
+            var lcllist = localStorage.l;
+
+            if(lcllist != null) {
+                list = JSON.parse(lcllist)
+                console.log(list);
+                var llngth = list.length;
+                i = 0;
+                while (i < llngth) {
+                    var value1 = list[i];
+                    b += 1;
+            const div = document.createElement("div")
+            div.id = "box" + b;
+            div.classList.add("box1");
+
+            document.getElementById("list").appendChild(div);
+            
+            const text = document.createElement("a");
+            text.innerHTML = value1;
+            text.classList.add("txt1");
+            div.onmouseover = function() {
+                text.style.textDecoration = "line-through";
+            }
+            div.onmouseout = function() {
+                text.style.textDecoration = "none";
+            }
+            document.getElementById("box" + b).appendChild(text);
+            div.onclick = function() {
+                remove(div , text.innerHTML);
+            }
+            i += 1;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
